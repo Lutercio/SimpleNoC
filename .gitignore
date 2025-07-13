@@ -1,0 +1,30 @@
+# Build directories
+build/
+bin/
+
+# IDE configurations
+.vscode/
+.vs/
+
+# Build scripts (keeping only Makefile)
+*.bat
+
+# Empty setup file
+SETUP.md
+
+# Test files
+test_*.cpp
+
+# CMake (using Makefile instead)
+CMakeLists.txt
+
+# Object files
+*.o
+*.obj
+
+# Executables
+*.exe
+
+# Temporary files
+*.tmp
+*.log
