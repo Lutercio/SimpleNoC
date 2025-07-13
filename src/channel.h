@@ -4,56 +4,56 @@
 #include <systemc.h>
 #include "packet.h"
 
-// Channel class for NoC communication
+// Classe Channel para comunicação NoC
 class Channel : public sc_module {
 public:
-    // Input and output ports
+    // Portas de entrada e saída
     sc_in<bool> clk;
-    sc_in<Packet> in_packet;    // Input packet
-    sc_in<bool> in_valid;       // Input valid signal
-    sc_out<bool> in_ready;      // Input ready signal
+    sc_in<Packet> in_packet;    // Pacote de entrada
+    sc_in<bool> in_valid;       // Sinal de validade da entrada
+    sc_out<bool> in_ready;      // Sinal de pronto da entrada
     
-    sc_out<Packet> out_packet;  // Output packet
-    sc_out<bool> out_valid;     // Output valid signal
-    sc_in<bool> out_ready;      // Output ready signal
+    sc_out<Packet> out_packet;  // Pacote de saída
+    sc_out<bool> out_valid;     // Sinal de validade da saída
+    sc_in<bool> out_ready;      // Sinal de pronto da saída
 
-    // Channel state
+    // Estado do canal
     bool busy;
     Packet buffer;
     int delay;
     int delay_counter;
 
-    // Constructor
+    // Construtor
     Channel(sc_module_name name, int transmission_delay = 1) : 
         sc_module(name),
         busy(false),
         delay(transmission_delay),
         delay_counter(0) {
         
-        // Register processes
+        // Registrar processos
         SC_METHOD(process);
         sensitive << clk.pos();
     }
 
-    // Process method
+    // Método de processo
     void process() {
-        // Always signal if we're ready to receive
+        // Sempre sinalizar se estamos prontos para receber
         in_ready.write(!busy);
         
-        // If not busy and there's a valid input, accept it
+        // Se não estamos ocupados e há uma entrada válida, aceitar
         if (!busy && in_valid.read()) {
             buffer = in_packet.read();
             busy = true;
             delay_counter = delay;
         }
         
-        // If busy, count down delay
+        // Se ocupado, decrementar contador de atraso
         if (busy) {
             if (delay_counter > 0) {
                 delay_counter--;
             }
             
-            // If delay is done and output is ready, send the packet
+            // Se o atraso terminou e a saída está pronta, enviar o pacote
             if (delay_counter == 0 && out_ready.read()) {
                 out_packet.write(buffer);
                 out_valid.write(true);

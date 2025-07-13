@@ -7,7 +7,7 @@
 #include <cstdlib>
 #include <climits>
 
-// Direction enumeration for mesh topology
+// Enumeração de direções para topologia de malha
 enum Direction {
     NORTH = 0,
     EAST = 1,
@@ -17,48 +17,48 @@ enum Direction {
     NONE = -1
 };
 
-// Base class for routing algorithms
+// Classe base para algoritmos de roteamento
 class RoutingAlgorithm {
 public:
     virtual ~RoutingAlgorithm() {}
     
-    // Calculate output port based on current position and destination
+    // Calcular porta de saída baseada na posição atual e destino
     virtual Direction calculateOutputPort(
         int current_x, int current_y,
         int dest_x, int dest_y) const = 0;
     
-    // Get algorithm name
+    // Obter nome do algoritmo
     virtual std::string getName() const = 0;
 };
 
-// XY Routing Algorithm (Dimension-Ordered Routing)
-// First routes in X dimension, then in Y dimension
+// Algoritmo de Roteamento XY (Roteamento Ordenado por Dimensão)
+// Primeiro roteia na dimensão X, depois na dimensão Y
 class XYRoutingAlgorithm : public RoutingAlgorithm {
 public:
     Direction calculateOutputPort(
         int current_x, int current_y,
         int dest_x, int dest_y) const override {
         
-        // First check if we're at destination
+        // Primeiro verificar se estamos no destino
         if (current_x == dest_x && current_y == dest_y) {
             return LOCAL;
         }
         
-        // First move in X direction until we match destination's X
+        // Primeiro mover na direção X até combinar com o X do destino
         if (current_x < dest_x) {
             return EAST;
         } else if (current_x > dest_x) {
             return WEST;
         }
         
-        // Then move in Y direction
+        // Então mover na direção Y
         if (current_y < dest_y) {
             return SOUTH;
         } else if (current_y > dest_y) {
             return NORTH;
         }
         
-        return NONE; // Should never happen
+        return NONE; // Nunca deveria acontecer
     }
     
     std::string getName() const override {
@@ -66,28 +66,28 @@ public:
     }
 };
 
-// Adaptive West-First Routing Algorithm
-// Packets can only turn west at the first hop, after that they must go minimally
+// Algoritmo de Roteamento Adaptativo West-First
+// Pacotes só podem virar para oeste no primeiro salto, depois devem seguir minimamente
 class WestFirstRoutingAlgorithm : public RoutingAlgorithm {
 public:
     Direction calculateOutputPort(
         int current_x, int current_y,
         int dest_x, int dest_y) const override {
         
-        // First check if we're at destination
+        // Primeiro verificar se estamos no destino
         if (current_x == dest_x && current_y == dest_y) {
             return LOCAL;
         }
         
-        // A vector of possible directions
+        // Um vetor de direções possíveis
         std::vector<Direction> possible_dirs;
         
-        // If destination is to the west, we must go west first
+        // Se o destino está a oeste, devemos ir para oeste primeiro
         if (current_x > dest_x) {
             return WEST;
         }
         
-        // Otherwise, we can choose adaptively among remaining directions
+        // Caso contrário, podemos escolher adaptativamente entre as direções restantes
         if (current_x < dest_x) {
             possible_dirs.push_back(EAST);
         }
@@ -98,14 +98,14 @@ public:
             possible_dirs.push_back(NORTH);
         }
         
-        // If there are possible directions, choose one (randomly in this case)
+        // Se há direções possíveis, escolher uma (aleatoriamente neste caso)
         if (!possible_dirs.empty()) {
-            // In a real implementation, we'd choose based on congestion
-            // For simulation, we'll just pick the first option
+            // Em uma implementação real, escolheríamos baseado no congestionamento
+            // Para simulação, vamos apenas escolher a primeira opção
             return possible_dirs[0];
         }
         
-        return NONE; // Should never happen
+        return NONE; // Nunca deveria acontecer
     }
     
     std::string getName() const override {
@@ -113,7 +113,7 @@ public:
     }
 };
 
-// Factory function to create routing algorithms
+// Função de fábrica para criar algoritmos de roteamento
 inline RoutingAlgorithm* createRoutingAlgorithm(const std::string& algorithm_name) {
     if (algorithm_name == "XY") {
         return new XYRoutingAlgorithm();
@@ -121,8 +121,8 @@ inline RoutingAlgorithm* createRoutingAlgorithm(const std::string& algorithm_nam
         return new WestFirstRoutingAlgorithm();
     }
     
-    // Default to XY routing
-    std::cout << "Warning: Unknown routing algorithm. Using XY routing." << std::endl;
+    // Padrão para roteamento XY
+    std::cout << "Aviso: Algoritmo de roteamento desconhecido. Usando roteamento XY." << std::endl;
     return new XYRoutingAlgorithm();
 }
 

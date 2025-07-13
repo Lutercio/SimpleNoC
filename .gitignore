@@ -1,30 +1,31 @@
-# Build directories
-build/
-bin/
+# Compilação e executáveis
+*.o
+*.obj
+*.exe
+*.tmp
+*.log
 
-# IDE configurations
+# Diretórios de build
+build/CMakeCache.txt
+build/CMakeFiles/
+
+# Arquivos temporários
+compile_log.txt
+
+# Python cache
+__pycache__/
+*.pyc
+.venv/
+test_env/
+
+# IDEs
 .vscode/
 .vs/
 
-# Build scripts (keeping only Makefile)
-*.bat
+# Resultados de teste específicos (manter estrutura de diretórios)
+test_outputs/*.txt
+test_outputs/*.png
+test_outputs/*.csv
 
-# Empty setup file
-SETUP.md
-
-# Test files
-test_*.cpp
-
-# CMake (using Makefile instead)
-CMakeLists.txt
-
-# Object files
-*.o
-*.obj
-
-# Executables
-*.exe
-
-# Temporary files
-*.tmp
-*.log
+# Manter apenas um analyze_results.py
+analyze_results.py

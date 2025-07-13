@@ -5,16 +5,16 @@
 #include <string>
 #include <iostream>
 
-// Packet class definition for NoC communication
+// Definição da classe Packet para comunicação NoC
 class Packet {
 public:
-    // Packet types
+    // Tipos de pacote
     enum PacketType {
         DATA,
         CONTROL
     };
 
-    // Constructor
+    // Construtor
     Packet(int src_id = -1, int dst_id = -1, PacketType type = DATA, 
            int payload = 0, int timestamp = 0) : 
         src_id_(src_id),
@@ -25,7 +25,7 @@ public:
         hops_(0),
         creation_time_(timestamp) {}
 
-    // Copy constructor
+    // Construtor de cópia
     Packet(const Packet& other) :
         src_id_(other.src_id_),
         dst_id_(other.dst_id_),
@@ -36,7 +36,7 @@ public:
         creation_time_(other.creation_time_),
         route_path_(other.route_path_) {}
 
-    // Getters
+    // Getters (métodos de acesso)
     int getSrcId() const { return src_id_; }
     int getDstId() const { return dst_id_; }
     PacketType getType() const { return type_; }
@@ -46,17 +46,17 @@ public:
     int getCreationTime() const { return creation_time_; }
     std::string getRoutePath() const { return route_path_; }
 
-    // Setters
+    // Setters (métodos de modificação)
     void setSrcId(int src_id) { src_id_ = src_id; }
     void setDstId(int dst_id) { dst_id_ = dst_id; }
     void setType(PacketType type) { type_ = type; }
     void setPayload(int payload) { payload_ = payload; }
     void setTimestamp(int timestamp) { timestamp_ = timestamp; }
 
-    // Increment hop count when packet passes through a router
+    // Incrementar contador de saltos quando o pacote passa por um roteador
     void incrementHops() { hops_++; }
 
-    // Add node ID to route path
+    // Adicionar ID do nó ao caminho da rota
     void addToPath(int node_id) {
         if (!route_path_.empty()) {
             route_path_ += " -> ";
@@ -64,12 +64,12 @@ public:
         route_path_ += std::to_string(node_id);
     }
 
-    // Calculate latency
+    // Calcular latência
     int getLatency(int current_time) const {
         return current_time - creation_time_;
     }
 
-    // Print packet information
+    // Imprimir informações do pacote
     friend std::ostream& operator<<(std::ostream& os, const Packet& packet) {
         os << "Packet[" << packet.src_id_ << "->" << packet.dst_id_ 
            << ", Type: " << (packet.type_ == DATA ? "DATA" : "CONTROL") 
@@ -79,7 +79,7 @@ public:
         return os;
     }
 
-    // Operators for SystemC compatibility
+    // Operadores para compatibilidade com SystemC
     bool operator==(const Packet& other) const {
         return src_id_ == other.src_id_ && dst_id_ == other.dst_id_ && 
                payload_ == other.payload_ && timestamp_ == other.timestamp_;
@@ -89,7 +89,7 @@ public:
         return !(*this == other);
     }
 
-    // Assignment operator
+    // Operador de atribuição
     Packet& operator=(const Packet& other) {
         if (this != &other) {
             src_id_ = other.src_id_;
@@ -105,17 +105,17 @@ public:
     }
 
 private:
-    int src_id_;          // Source node ID
-    int dst_id_;          // Destination node ID
-    PacketType type_;     // Packet type (data or control)
-    int payload_;         // Packet payload
-    int timestamp_;       // Current timestamp
-    int hops_;            // Number of hops traveled
-    int creation_time_;   // Time when packet was created
-    std::string route_path_; // String representing the path taken
+    int src_id_;          // ID do nó de origem
+    int dst_id_;          // ID do nó de destino
+    PacketType type_;     // Tipo do pacote (dados ou controle)
+    int payload_;         // Carga útil do pacote
+    int timestamp_;       // Timestamp atual
+    int hops_;            // Número de saltos percorridos
+    int creation_time_;   // Tempo quando o pacote foi criado
+    std::string route_path_; // String representando o caminho percorrido
 };
 
-// SystemC trace function for Packet class
+// Função de trace do SystemC para a classe Packet
 inline void sc_trace(sc_core::sc_trace_file* tf, const Packet& packet, const std::string& name) {
     sc_trace(tf, packet.getSrcId(), name + "_src_id");
     sc_trace(tf, packet.getDstId(), name + "_dst_id");

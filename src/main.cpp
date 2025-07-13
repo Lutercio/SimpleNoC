@@ -6,31 +6,28 @@
 #include "noc.h"
 #include "routing_algorithms.h"
 
-// Function to run a simulation with specified parameters
+// Função para executar uma simulação com parâmetros especificados
 void run_simulation(int mesh_size, const std::string& routing_algorithm, 
                    int packet_injection_rate, int simulation_time) {
-    // Create NoC
+    // Criar NoC
     NoC noc("network_on_chip", mesh_size, mesh_size, 
             routing_algorithm, packet_injection_rate, simulation_time);
     
-    // Start simulation
-    sc_start(simulation_time + 100, SC_NS);
-    
-    // End simulation
-    sc_stop();
+    // Iniciar simulação e aguardar completar
+    sc_start();
 }
 
 int main(int argc, char* argv[]) {
-    // Seed random number generator
+    // Inicializar gerador de números aleatórios
     std::srand(std::time(nullptr));
     
-    // Default parameters
-    int mesh_size = 4;  // 4x4 mesh by default
-    std::string routing_algorithm = "XY";  // XY routing by default
-    int packet_injection_rate = 10;  // 10% injection rate by default
-    int simulation_time = 1000;  // 1000 cycles by default
+    // Parâmetros padrão
+    int mesh_size = 4;  // malha 4x4 por padrão
+    std::string routing_algorithm = "XY";  // roteamento XY por padrão
+    int packet_injection_rate = 10;  // taxa de injeção 10% por padrão
+    int simulation_time = 1000;  // 1000 ciclos por padrão
     
-    // Parse command line arguments
+    // Analisar argumentos da linha de comando
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
         
@@ -43,45 +40,45 @@ int main(int argc, char* argv[]) {
         } else if (arg == "-time" && i + 1 < argc) {
             simulation_time = std::atoi(argv[++i]);
         } else if (arg == "-help" || arg == "-h") {
-            std::cout << "Usage: " << argv[0] << " [options]" << std::endl;
-            std::cout << "Options:" << std::endl;
-            std::cout << "  -size SIZE        Set mesh size (default: 4)" << std::endl;
-            std::cout << "  -routing ALGO     Set routing algorithm: XY, WEST_FIRST (default: XY)" << std::endl;
-            std::cout << "  -rate RATE        Set packet injection rate in percent (default: 10)" << std::endl;
-            std::cout << "  -time TIME        Set simulation time in cycles (default: 1000)" << std::endl;
-            std::cout << "  -help, -h         Show this help message" << std::endl;
+            std::cout << "Uso: " << argv[0] << " [opções]" << std::endl;
+            std::cout << "Opções:" << std::endl;
+            std::cout << "  -size TAMANHO     Define o tamanho da malha (padrão: 4)" << std::endl;
+            std::cout << "  -routing ALGO     Define o algoritmo de roteamento: XY, WEST_FIRST (padrão: XY)" << std::endl;
+            std::cout << "  -rate TAXA        Define a taxa de injeção de pacotes em porcentagem (padrão: 10)" << std::endl;
+            std::cout << "  -time TEMPO       Define o tempo de simulação em ciclos (padrão: 1000)" << std::endl;
+            std::cout << "  -help, -h         Mostra esta mensagem de ajuda" << std::endl;
             return 0;
         }
     }
     
-    // Validate parameters
+    // Validar parâmetros
     if (mesh_size < 2 || mesh_size > 16) {
-        std::cout << "Error: Mesh size must be between 2 and 16" << std::endl;
+        std::cout << "Erro: Tamanho da malha deve estar entre 2 e 16" << std::endl;
         return 1;
     }
     
     if (routing_algorithm != "XY" && routing_algorithm != "WEST_FIRST") {
-        std::cout << "Error: Unknown routing algorithm. Supported: XY, WEST_FIRST" << std::endl;
+        std::cout << "Erro: Algoritmo de roteamento desconhecido. Suportados: XY, WEST_FIRST" << std::endl;
         return 1;
     }
     
     if (packet_injection_rate < 1 || packet_injection_rate > 100) {
-        std::cout << "Error: Packet injection rate must be between 1 and 100" << std::endl;
+        std::cout << "Erro: Taxa de injeção de pacotes deve estar entre 1 e 100" << std::endl;
         return 1;
     }
     
     if (simulation_time < 100) {
-        std::cout << "Error: Simulation time must be at least 100 cycles" << std::endl;
+        std::cout << "Erro: Tempo de simulação deve ser pelo menos 100 ciclos" << std::endl;
         return 1;
     }
     
-    // Run simulation with XY routing
-    std::cout << "Running simulation with " << routing_algorithm << " routing algorithm..." << std::endl;
+    // Executar simulação com o algoritmo especificado
+    std::cout << "Executando simulação com algoritmo de roteamento " << routing_algorithm << "..." << std::endl;
     run_simulation(mesh_size, routing_algorithm, packet_injection_rate, simulation_time);
     
-    // If we're using XY routing, also run with West-First for comparison
+    // Se estamos usando roteamento XY, também executar com West-First para comparação
     if (routing_algorithm == "XY") {
-        std::cout << "\n\nRunning simulation with WEST_FIRST routing algorithm for comparison..." << std::endl;
+        std::cout << "\n\nExecutando simulação com algoritmo de roteamento WEST_FIRST para comparação..." << std::endl;
         run_simulation(mesh_size, "WEST_FIRST", packet_injection_rate, simulation_time);
     }
     

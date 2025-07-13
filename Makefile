@@ -20,7 +20,7 @@ OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRC_FILES))
 # Target executable
 TARGET = $(BIN_DIR)/noc_simulation
 
-.PHONY: all clean run
+.PHONY: all clean run test analyze
 
 all: dirs $(TARGET)
 
@@ -33,6 +33,7 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 dirs:
 	if not exist $(BUILD_DIR) mkdir $(BUILD_DIR)
 	if not exist $(BIN_DIR) mkdir $(BIN_DIR)
+	if not exist test_outputs mkdir test_outputs
 
 clean:
 	if exist $(BUILD_DIR) rmdir /s /q $(BUILD_DIR)
@@ -40,3 +41,13 @@ clean:
 
 run: all
 	$(TARGET)
+
+# Execute automated test suite
+test: all
+	@echo Executando suite de testes automatizados...
+	scripts\run_tests.bat
+
+# Analyze test results (requires Python with pandas)
+analyze:
+	@echo Analisando resultados dos testes...
+	@python scripts\analyze_results.py || python scripts\analyze_results_simple.py
