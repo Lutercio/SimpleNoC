@@ -71,7 +71,7 @@ public:
 
     // Imprimir informações do pacote
     friend std::ostream& operator<<(std::ostream& os, const Packet& packet) {
-        os << "Packet[" << packet.src_id_ << "->" << packet.dst_id_ 
+        os << "Packet[" << packet.src_id_ << " -> " << packet.dst_id_ 
            << ", Type: " << (packet.type_ == DATA ? "DATA" : "CONTROL") 
            << ", Payload: " << packet.payload_
            << ", Hops: " << packet.hops_

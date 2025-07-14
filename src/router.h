@@ -72,6 +72,13 @@ public:
 
     // Processo para tratar roteamento de pacotes
     void process_routing() {
+        // Primeiro, liberar reservas se as saídas foram aceitas
+        for (int i = 0; i < 5; i++) {
+            if (output_reserved[i] && out_readys[i].read()) {
+                output_reserved[i] = false; // LIBERAR A RESERVA!
+            }
+        }
+        
         // Resetar sinais de validade de saída
         for (int i = 0; i < 5; i++) {
             if (!output_reserved[i]) {

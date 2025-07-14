@@ -47,7 +47,22 @@ test: all
 	@echo Executando suite de testes automatizados...
 	scripts\run_tests.bat
 
-# Analyze test results (requires Python with pandas)
+# Execute extended test suite (20 tests)
+test-extended: all
+	@echo Executando suite estendida de testes (20 cenarios)...
+	scripts\run_extended_tests.bat
+
+# Execute comprehensive test suite (50 tests, 4x4 to 16x16)
+test-50: all
+	@echo Executando 50 testes (malhas 4x4 ate 16x16)...
+	scripts\run_tests_50.bat
+
+# Analyze test results (requires Python)
 analyze:
 	@echo Analisando resultados dos testes...
-	@python scripts\analyze_results.py || python scripts\analyze_results_simple.py
+	@C:\msys64\mingw64\bin\python.exe scripts\analyze_results.py
+
+# Analyze specific timestamp
+analyze-timestamp:
+	@echo Analisando resultados com timestamp especifico...
+	@C:\msys64\mingw64\bin\python.exe scripts\analyze_results.py $(TIMESTAMP)

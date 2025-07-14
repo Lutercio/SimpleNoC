@@ -76,11 +76,5 @@ int main(int argc, char* argv[]) {
     std::cout << "Executando simulação com algoritmo de roteamento " << routing_algorithm << "..." << std::endl;
     run_simulation(mesh_size, routing_algorithm, packet_injection_rate, simulation_time);
     
-    // Se estamos usando roteamento XY, também executar com West-First para comparação
-    if (routing_algorithm == "XY") {
-        std::cout << "\n\nExecutando simulação com algoritmo de roteamento WEST_FIRST para comparação..." << std::endl;
-        run_simulation(mesh_size, "WEST_FIRST", packet_injection_rate, simulation_time);
-    }
-    
     return 0;
 }

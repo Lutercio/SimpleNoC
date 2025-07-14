@@ -113,7 +113,7 @@ public:
     }
 };
 
-// Função de fábrica para criar algoritmos de roteamento
+// Função para criar algoritmos de roteamento
 inline RoutingAlgorithm* createRoutingAlgorithm(const std::string& algorithm_name) {
     if (algorithm_name == "XY") {
         return new XYRoutingAlgorithm();
